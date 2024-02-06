@@ -51,11 +51,11 @@ static esp_err_t event_handler(void* arg, esp_event_base_t event_base,int32_t ev
 // Initialize Wi-Fi
 void wifi_init_ap() {
 
-	esp_netif_init(); // REQUIRED - Initialize the underlying TCP/IP stack.
+    esp_netif_init(); // REQUIRED - Initialize the underlying TCP/IP stack.
 
 #if 0 //Not actually needed for most basic setup
-	esp_event_loop_create_default();
-	esp_netif_create_default_wifi_ap();
+    esp_event_loop_create_default();
+    esp_netif_create_default_wifi_ap();
 
     esp_event_loop_create_default();
     wifi_init_config_t cfg = WIFI_INIT_CONFIG_DEFAULT();
@@ -227,116 +227,11 @@ void client_task(void *pvParameters) {
 
 void app_main() {
 
-	wifi_init_ap();
+    wifi_init_ap();
 
-	printf("START SERVER TASK\n");
+    printf("START SERVER TASK\n");
     xTaskCreate(server_task, "server_task", 4096, NULL, 5, NULL);
 
     printf("START CLIENT TASK\n");
     xTaskCreate(client_task, "client_task", 4096, NULL, 5, NULL);
 }
-
-
-
-
-#if 0
-#include <stdio.h>
-#include <inttypes.h>
-#include "sdkconfig.h"
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
-#include "esp_chip_info.h"
-#include "esp_flash.h"
-#include "esp_log.h"
-
-#define CORE_0 0
-#define CORE_1 1
-
-#define TASK_SIZE 4096
-
-static StackType_t StackA[TASK_SIZE] = {0};
-static StackType_t StackB[TASK_SIZE] = {0};
-static StackType_t StackC[TASK_SIZE] = {0};
-
-static StaticTask_t TaskA;
-static StaticTask_t TaskB;
-static StaticTask_t TaskC;
-
-TaskHandle_t taskHandle_A;
-TaskHandle_t taskHandle_B;
-TaskHandle_t taskHandle_C;
-
-void taskARunnabe(void* args);
-void taskBRunnabe(void* args);
-void taskCRunnabe(void* args);
-
-static int createdTaskB = 0;
-
-void app_main(void)
-{
-    printf("Hello world!\n");
-
-    printf("Starting Task C!\n");
-    taskHandle_C = xTaskCreateStaticPinnedToCore(taskCRunnabe, "TaskC", TASK_SIZE, NULL, 2, StackC, &TaskC, CORE_0);
-	if(!taskHandle_C)
-	{
-		printf("Starting Task C Failed!\n");
-	}
-
-    printf("Starting Task A!\n");
-    taskHandle_A = xTaskCreateStaticPinnedToCore(taskARunnabe, "TaskA", TASK_SIZE, NULL, 2, StackA, &TaskA, CORE_1);
-	if(!taskHandle_A)
-	{
-		printf("Starting Task A Failed!\n");
-	}
-}
-
-
-void taskCRunnabe(void* args)
-{
-	while(1){
-		//printf("TaskC\n");
-		ESP_LOGE("C","TaskC\n");
-		vTaskDelay(10); // Avoid Task watchdog for Task C
-	};
-
-	printf("End Task C!\n");
-}
-
-void taskARunnabe(void* args)
-{
-	//while(1){}; //Causes Task watchdog as expected
-
-	while(1){
-		if(createdTaskB == 0)
-		{
-			createdTaskB = 1;
-			printf("Starting Task B!\n");
-			taskHandle_B = xTaskCreateStaticPinnedToCore(taskBRunnabe, "TaskB", TASK_SIZE, NULL, 1, StackB, &TaskB, CORE_1);
-
-			if(!taskHandle_B)
-			{
-				printf("Starting Task B Failed!\n");
-			}
-		}
-
-		vTaskDelay(10); // Avoid Task watchdog for Task A
-
-		//printf("TaskA\n");
-		ESP_LOGE("A","TaskA\n");
-	}
-
-	printf("End Task A!\n");
-}
-
-
-void taskBRunnabe(void* args)
-{
-	while(1){
-		ESP_LOGE("B","TaskB\n");
-	};
-
-	printf("End Task B!\n");
-}
-
-#endif
