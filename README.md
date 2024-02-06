@@ -1,54 +1,32 @@
-| Supported Targets | ESP32 | ESP32-C2 | ESP32-C3 | ESP32-S2 | ESP32-S3 |
-| ----------------- | ----- | -------- | -------- | -------- | -------- |
+## Minimal LocalHost / LoopBack example.
 
-# Hello World Example
-
-Starts a FreeRTOS task to print "Hello World".
-
-(See the README.md file in the upper level 'examples' directory for more information about examples.)
-
-## How to use example
-
-Follow detailed instructions provided specifically for this example. 
-
-Select the instructions depending on Espressif chip installed on your development board:
-
-- [ESP32 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/stable/get-started/index.html)
-- [ESP32-S2 Getting Started Guide](https://docs.espressif.com/projects/esp-idf/en/latest/esp32s2/get-started/index.html)
+The ESP creates a server socket and listens for incoming connections.  
+The ESP itself connects to this server via localhost / 127.0.0.1 using lwip loop back.
 
 
-## Example folder contents
-
-The project **hello_world** contains one source file in C language [hello_world_main.c](main/hello_world_main.c). The file is located in folder [main](main).
-
-ESP-IDF projects are built using CMake. The project build configuration is contained in `CMakeLists.txt` files that provide set of directives and instructions describing the project's source files and targets (executable, library, or both). 
-
-Below is short explanation of remaining files in the project folder.
-
+### Log output:
 ```
-├── CMakeLists.txt
-├── pytest_hello_world.py      Python script used for automated testing
-├── main
-│   ├── CMakeLists.txt
-│   └── hello_world_main.c
-└── README.md                  This is the file you are currently reading
+START SERVER TASK
+START CLIENT TASK
+Server socket created. (id: 54)
+Server IP: 0.0.0.0
+Server PORT: 3333
+(at 321) Client: Message sent: ping
+TCP connection accepted!
+TCP connection Incoming ip: 127.0.0.1
+TCP connection Incoming port: 64417
+TCP connection server socket: 54
+TCP connection client socket: 56
+Server: Connection accepted from 127.0.0.1
+(at 341) Server: Received message from client: ping
+(at 346) Client: Received reply from server: ping
+(at 10349) Client: Message sent: ping
+(at 10350) Server: Received message from client: ping
+(at 10352) Client: Received reply from server: ping
+(at 20350) Client: Message sent: ping
+(at 20350) Server: Received message from client: ping
+(at 20351) Client: Received reply from server: ping
+(at 30349) Client: Message sent: ping
+(at 30350) Server: Received message from client: ping
+(at 30351) Client: Received reply from server: ping
 ```
-
-For more information on structure and contents of ESP-IDF projects, please refer to Section [Build System](https://docs.espressif.com/projects/esp-idf/en/latest/esp32/api-guides/build-system.html) of the ESP-IDF Programming Guide.
-
-## Troubleshooting
-
-* Program upload failure
-
-    * Hardware connection is not correct: run `idf.py -p PORT monitor`, and reboot your board to see if there are any output logs.
-    * The baud rate for downloading is too high: lower your baud rate in the `menuconfig` menu, and try again.
-
-## Technical support and feedback
-
-Please use the following feedback channels:
-
-* For technical queries, go to the [esp32.com](https://esp32.com/) forum
-* For a feature request or bug report, create a [GitHub issue](https://github.com/espressif/esp-idf/issues)
-
-We will get back to you as soon as possible.
-# ESP-localhost-loopback-example
